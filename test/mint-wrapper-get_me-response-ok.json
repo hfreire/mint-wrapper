@@ -1,0 +1,105 @@
+{
+  "t": 0,
+  "id": "my-user-id",
+  "admirers": [],
+  "alerts": {
+    "add_spotify_track": "hidden",
+    "admirers_trial_unlocked": "hidden",
+    "connect_instagram": "hidden",
+    "close_nearby_active": "hidden",
+    "get_premium_for_unlimited_chats": "hidden",
+    "get_premium_to_unlock_admirers": "hidden",
+    "invite_friends": "hidden",
+    "nearby_active": "unseen",
+    "open_nearby_active": "hidden",
+    "premium_trial": "hidden",
+    "rate_app": "hidden",
+    "send_gif_in_chat": "hidden",
+    "send_photo_in_chat": "hidden",
+    "send_sticker_in_chat": "hidden"
+  },
+  "blocks": [],
+  "chats": [],
+  "configuration": {
+    "new_chats_per_day_limit": 3,
+    "new_likes_per_day_limit": 3
+  },
+  "connections": null,
+  "discovered": [],
+  "favorites": [],
+  "features": {
+    "admirers": "unlocked",
+    "premium": "locked",
+    "premium_subscription": "inactive",
+    "tier": 3,
+    "unlimited_chats": "locked"
+  },
+  "filter": {
+    "age_range": {
+      "from": 21,
+      "to": 49
+    },
+    "distance": 161,
+    "looking_for": "men"
+  },
+  "invites": {
+    "accepted": 0,
+    "required": 3
+  },
+  "last_seen_admirers_time": 0,
+  "last_seen_chats_time": 0,
+  "nearby_active": [],
+  "new_chats_blocked_until_time": 0,
+  "new_likes_blocked_until_time": 0,
+  "profile": {
+    "id": "my-user-id",
+    "bio": null,
+    "birthday": "1984-03-02",
+    "fb_mutual_friends_count": 0,
+    "first_name": "Lisa",
+    "gender": "female",
+    "work": [],
+    "education": [],
+    "connections": null,
+    "interests_time": 0,
+    "instagram_media_count": 0,
+    "instagram_media_time": null,
+    "spotify_tracks_count": 0,
+    "spotify_tracks_time": null,
+    "avatar_url": "my-avatar-url",
+    "interests": [{
+      "id": "my-interest-id",
+      "order": 0,
+      "interest": {
+        "id": "my-interest-id",
+        "name": "my-interest-name",
+        "url": "my-interest-url"
+      }
+    }],
+    "photos": [{
+      "id": "my-photo-id",
+      "url": "my-photo-url",
+      "order": 1
+    }],
+    "instagram_media": [],
+    "spotify_tracks": []
+  },
+  "settings": {
+    "distance_unit": "km",
+    "hide_me": false,
+    "hide_my_age": false,
+    "hide_my_location": false,
+    "hide_my_last_active_time": false,
+    "notifications": {
+      "likes": true,
+      "messages": true,
+      "in_app_vibration": false
+    }
+  },
+  "system_time": 0,
+  "unseen_admirers_count": 0,
+  "unseen_chats_count": 0,
+  "debug": {
+    "enabled": false
+  }
+}

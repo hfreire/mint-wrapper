@@ -1,0 +1,30 @@
+{
+  "id": "my-user-id",
+  "bio": null,
+  "birthday": "1969-02-01",
+  "fb_mutual_friends_count": 0,
+  "first_name": "my-fist-name",
+  "gender": "male",
+  "work": [{
+    "employer": "my-employer",
+    "position": "my-position",
+    "display_format": "position_employer",
+    "fb_id": "my-work-facebook-id"
+  }],
+  "education": [{
+    "fb_id": "my-education-facebook-id",
+    "name": "my-school-name"
+  }],
+  "connections": null,
+  "interests_time": 1502438083648,
+  "instagram_media_count": 0,
+  "instagram_media_time": null,
+  "spotify_tracks_count": 0,
+  "spotify_tracks_time": null,
+  "distance": 4,
+  "distance_new": "4km",
+  "last_active": 1506456937992,
+  "active_now": false,
+  "favorite": null,
+  "admirer": null
+}

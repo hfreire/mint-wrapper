@@ -1,0 +1,6 @@
+{
+  "user_id": "my-user-id",
+  "access_token": "my-access-token",
+  "expires_at": 0,
+  "mqtt_client_id": "my-mqtt-client-id"
+}

@@ -1,0 +1,72 @@
+{
+  "t": 1506539433662,
+  "admirers": {
+    "added": [{
+      "id": "my-user-id",
+      "created_time": 1506539433662
+    }],
+    "deleted_ids": []
+  },
+  "alerts": {
+    "add_spotify_track": "hidden",
+    "admirers_trial_unlocked": "hidden",
+    "connect_instagram": "hidden",
+    "close_nearby_active": "hidden",
+    "get_premium_for_unlimited_chats": "hidden",
+    "get_premium_to_unlock_admirers": "hidden",
+    "invite_friends": "hidden",
+    "nearby_active": "seen",
+    "open_nearby_active": "unseen",
+    "premium_trial": "hidden",
+    "rate_app": "hidden",
+    "send_gif_in_chat": "hidden",
+    "send_photo_in_chat": "hidden",
+    "send_sticker_in_chat": "hidden"
+  },
+  "chats": {
+    "added": [{
+      "id": "my-chat-id",
+      "can_write": true,
+      "can_write_message_count": null,
+      "first_message_id": "my-first-message-id",
+      "first_message_time": 1506539090496,
+      "last_message_id": "my-last-message-id",
+      "last_message_type": "text",
+      "last_message_text": "Hej \uD83D\uDE0A",
+      "last_message_time": 1506539090496,
+      "last_received_message_time": 1506539090496,
+      "last_read_time": 0,
+      "responded": true,
+      "participant_id": "my-participant-id",
+      "started": false,
+      "state": "active",
+      "type": "user",
+      "unread_messages_count": 1,
+      "was_deleted": false,
+      "was_history_deleted": false
+    }],
+    "deleted_ids": []
+  },
+  "discovered": {
+    "added": [{
+      "id": "my-user-id",
+      "discovered_time": 1506539205513
+    }],
+    "deleted_ids": []
+  },
+  "last_seen_admirers_time": 1506538517884,
+  "last_seen_chats_time": 1506539093767,
+  "nearby_active": {
+    "added": [{
+      "id": "my-user-id",
+      "added_time": 1506538872045,
+      "expires_time": 1506546072045
+    }],
+    "deleted_ids": []
+  },
+  "new_chats_blocked_until_time": 0,
+  "new_likes_blocked_until_time": 0,
+  "system_time": 1506539614483,
+  "unseen_admirers_count": 2,
+  "unseen_chats_count": 0
+}

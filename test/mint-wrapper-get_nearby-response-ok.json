@@ -1,0 +1,35 @@
+{
+  "data": [{
+    "id": "my-user-id",
+    "profile": {
+      "id": "my-user-id",
+      "bio": null,
+      "birthday": "1991-10-29",
+      "fb_mutual_friends_count": 0,
+      "first_name": "my-first-name",
+      "gender": "male",
+      "work": [],
+      "education": [],
+      "connections": null,
+      "interests_time": 1506434141469,
+      "instagram_media_count": 0,
+      "instagram_media_time": null,
+      "spotify_tracks_count": 0,
+      "spotify_tracks_time": null,
+      "distance": 7,
+      "distance_new": "7km",
+      "last_active": 1506539045448,
+      "active_now": true,
+      "favorite": null,
+      "admirer": null,
+      "avatar_url": "my-avatar-url",
+      "photos": [{
+        "id": "my-photo-id",
+        "url": "my-photo-url",
+        "order": 1
+      }]
+    },
+    "added_time": 1506538872045,
+    "expires_time": 1506546072045
+  }]
+}
