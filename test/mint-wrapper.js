@@ -250,7 +250,7 @@ describe('Mint Wrapper', () => {
       subject = new MintWrapper()
     })
 
-    it('should reject with tinder not authorized error', (done) => {
+    it('should reject with mint not authorized error', (done) => {
       subject.getAccount()
         .catch((error) => {
           error.should.be.instanceOf(MintNotAuthorizedError)
@@ -277,7 +277,7 @@ describe('Mint Wrapper', () => {
       subject.accessToken = accessToken
     })
 
-    it('should do a get request to https://api.mint.me/v3/profiles/my-user-id', () => {
+    it('should do a get request to https://api.mint.me/v3/profiles', () => {
       return subject.getUser(userId)
         .then(() => {
           const captor = td.matchers.captor()
@@ -285,12 +285,11 @@ describe('Mint Wrapper', () => {
           td.verify(request.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
-          options.should.have.property('url', 'https://api.mint.me/v3/profiles/my-user-id')
+          options.should.have.property('url', 'https://api.mint.me/v3/profiles')
+          options.should.have.nested.property('qs.ids', 'my-user-id')
           options.should.have.nested.property('qs.picture_width', 640)
           options.should.have.nested.property('qs.picture_height', 558)
           options.should.have.nested.property('qs.avatar_size', 288)
-          options.should.have.nested.property('qs.interest_avatar_size', 170)
-          options.should.have.nested.property('qs.spotify_avatar_size', 170)
           options.should.have.nested.property('qs.scale', 1)
         })
     })
@@ -298,7 +297,7 @@ describe('Mint Wrapper', () => {
     it('should resolve with response body as data', () => {
       return subject.getUser(userId)
         .then((data) => {
-          data.should.be.equal(body)
+          data.should.be.equal(_.get(body, 'data[0]'))
         })
     })
   })
@@ -311,7 +310,7 @@ describe('Mint Wrapper', () => {
       subject = new MintWrapper()
     })
 
-    it('should reject with tinder not authorized error', (done) => {
+    it('should reject with mint not authorized error', (done) => {
       subject.getUser(userId)
         .catch((error) => {
           error.should.be.instanceOf(MintNotAuthorizedError)
@@ -366,7 +365,6 @@ describe('Mint Wrapper', () => {
           const options = captor.value
           options.should.have.property('url', 'https://api.mint.me/v5/me/sync')
           options.should.have.nested.property('qs.t')
-          options.qs.t.should.be.closeTo(new Date().getTime(), 60000)
           options.should.have.nested.property('qs.picture_width', 640)
           options.should.have.nested.property('qs.picture_height', 558)
           options.should.have.nested.property('qs.avatar_size', 288)
@@ -408,7 +406,7 @@ describe('Mint Wrapper', () => {
   })
 
   describe('when getting updates with invalid last activity date', () => {
-    const lastActivityDate = null
+    const lastActivityDate = 'my-last-activity-date'
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
@@ -435,7 +433,7 @@ describe('Mint Wrapper', () => {
       subject = new MintWrapper()
     })
 
-    it('should reject with tinder not authorized error', (done) => {
+    it('should reject with mint not authorized error', (done) => {
       subject.getUpdates()
         .catch((error) => {
           error.should.be.instanceOf(MintNotAuthorizedError)
@@ -510,7 +508,7 @@ describe('Mint Wrapper', () => {
       subject = new MintWrapper()
     })
 
-    it('should reject with tinder not authorized error', (done) => {
+    it('should reject with mint not authorized error', (done) => {
       subject.sendMessage(userId, chatId, message)
         .catch((error) => {
           error.should.be.instanceOf(MintNotAuthorizedError)

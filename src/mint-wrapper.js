@@ -37,12 +37,12 @@ const defaultOptions = {
   },
   retry: {
     max_tries: 2,
-    interval: 1000,
-    timeout: 16000,
+    interval: 3000,
+    timeout: 24000,
     throw_original: true,
     predicate: (error) => !(error instanceof MintNotAuthorizedError)
   },
-  breaker: { timeout: 12000, threshold: 80, circuitDuration: 3 * 60 * 60 * 1000 }
+  breaker: { timeout: 64000, threshold: 80, circuitDuration: 3 * 60 * 60 * 1000 }
 }
 
 class MintWrapper {
@@ -239,28 +239,28 @@ class MintWrapper {
     })
       .then(() => {
         const options = {
-          url: `${BASE_URL}/v3/profiles/${userId}`,
+          url: `${BASE_URL}/v3/profiles`,
           headers: {
             'X-Access-Token': this._accessToken
           },
           qs: {
+            ids: userId,
             picture_width: 640,
             picture_height: 558,
             avatar_size: 288,
-            interest_avatar_size: 170,
-            spotify_avatar_size: 170,
             scale: 1
           }
         }
 
         return this._getRequestCircuitBreaker.exec(options)
           .then((response) => handleResponse(response))
+          .then(({ data }) => _.get(data, '[0]'))
       })
   }
 
-  getUpdates (lastActivityDate = new Date()) {
+  getUpdates (lastActivityDate) {
     return Promise.try(() => {
-      if (!_.isDate(lastActivityDate)) {
+      if (lastActivityDate && !_.isDate(lastActivityDate)) {
         throw new Error('invalid arguments')
       }
 
@@ -269,7 +269,7 @@ class MintWrapper {
       }
     })
       .then(() => {
-        const _lastActivityDate = lastActivityDate.getTime()
+        const _lastActivityDate = lastActivityDate ? lastActivityDate.getTime() : undefined
 
         const options = {
           url: `${BASE_URL}/v5/me/sync`,
