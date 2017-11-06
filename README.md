@@ -9,7 +9,7 @@
 [![Version](https://img.shields.io/npm/v/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper)
 [![Downloads](https://img.shields.io/npm/dt/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper) 
 
-A Mint wrapper library.
+> A Mint wrapper library.
 
 ### Features
 * Retries :shit: failing requests in temporary and unexpected system and :boom: network failures :white_check_mark:
