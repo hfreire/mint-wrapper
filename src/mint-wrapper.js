@@ -9,12 +9,10 @@ const BASE_URL = 'https://api.mint.me'
 
 const _ = require('lodash')
 const Promise = require('bluebird')
-const retry = require('bluebird-retry')
-const Brakes = require('brakes')
 
 const { MintNotAuthorizedError } = require('./errors')
 
-const request = require('request')
+const RequestOnSteroids = require('request-on-steroids')
 
 const handleResponse = ({ body }) => {
   let _body = body
@@ -33,6 +31,21 @@ const defaultOptions = {
   request: {
     headers: {
       'User-Agent': 'Mint-Android/1.10.2'
+    },
+    callback: (response) => {
+      const { statusCode, statusMessage } = response
+
+      if (statusCode >= 300) {
+        switch (statusCode) {
+          case 401:
+          case 410:
+            throw new MintNotAuthorizedError()
+          default:
+            throw new Error(`${statusCode} ${statusMessage}`)
+        }
+      }
+
+      return response
     }
   },
   retry: {
@@ -49,49 +62,7 @@ class MintWrapper {
   constructor (options = {}) {
     this._options = _.defaultsDeep(options, defaultOptions)
 
-    this._request = Promise.promisifyAll(request.defaults(this._options.request))
-
-    this._breaker = new Brakes(this._options.breaker)
-
-    this._getRequestCircuitBreaker = this._breaker.slaveCircuit((...params) => retry(() => this._getRequest(...params), this._options.retry))
-    this._postRequestCircuitBreaker = this._breaker.slaveCircuit((...params) => retry(() => this._postRequest(...params), this._options.retry))
-
-    this._getRequest = (...params) => {
-      return this._request.getAsync(...params)
-        .then((response) => {
-          const { statusCode, statusMessage } = response
-
-          if (statusCode >= 300) {
-            switch (statusCode) {
-              case 401:
-              case 410:
-                throw new MintNotAuthorizedError()
-              default:
-                throw new Error(`${statusCode} ${statusMessage}`)
-            }
-          }
-
-          return response
-        })
-    }
-    this._postRequest = (...params) => {
-      return this._request.postAsync(...params)
-        .then((response) => {
-          const { statusCode, statusMessage } = response
-
-          if (statusCode >= 300) {
-            switch (statusCode) {
-              case 401:
-              case 410:
-                throw new MintNotAuthorizedError()
-              default:
-                throw new Error(`${statusCode} ${statusMessage}`)
-            }
-          }
-
-          return response
-        })
-    }
+    this._request = new RequestOnSteroids(this._options)
   }
 
   set accessToken (accessToken) {
@@ -111,7 +82,7 @@ class MintWrapper {
   }
 
   get circuitBreaker () {
-    return this._breaker
+    return this._request.circuitBreaker
   }
 
   authorize (facebookAccessToken) {
@@ -132,7 +103,7 @@ class MintWrapper {
           }
         }
 
-        return this._postRequestCircuitBreaker.exec(options)
+        return this._request.post(options)
           .then((response) => handleResponse(response))
           .then((data) => {
             this._accessToken = data.access_token
@@ -170,7 +141,7 @@ class MintWrapper {
             }
           }
 
-          return this._getRequestCircuitBreaker.exec(options)
+          return this._request.get(options)
             .then((response) => handleResponse(response))
             .then(({ data }) => data)
         }
@@ -190,7 +161,7 @@ class MintWrapper {
             }
           }
 
-          return this._getRequestCircuitBreaker.exec(options)
+          return this._request.get(options)
             .then((response) => handleResponse(response))
             .then(({ data }) => data)
         }
@@ -222,7 +193,7 @@ class MintWrapper {
           }
         }
 
-        return this._getRequestCircuitBreaker.exec(options)
+        return this._request.get(options)
           .then((response) => handleResponse(response))
       })
   }
@@ -252,7 +223,7 @@ class MintWrapper {
           }
         }
 
-        return this._getRequestCircuitBreaker.exec(options)
+        return this._request.get(options)
           .then((response) => handleResponse(response))
           .then(({ data }) => _.get(data, '[0]'))
       })
@@ -287,7 +258,7 @@ class MintWrapper {
           }
         }
 
-        return this._getRequestCircuitBreaker.exec(options)
+        return this._request.get(options)
           .then((response) => handleResponse(response))
       })
   }
@@ -317,7 +288,7 @@ class MintWrapper {
             json: true
           }
 
-          return this._postRequestCircuitBreaker.exec(options)
+          return this._request.post(options)
             .then((response) => handleResponse(response))
             .then(({ id }) => id)
         }
@@ -338,7 +309,7 @@ class MintWrapper {
           json: true
         }
 
-        return this._postRequestCircuitBreaker.exec(options)
+        return this._request.post(options)
           .then((response) => handleResponse(response))
       })
   }
@@ -366,7 +337,7 @@ class MintWrapper {
           }
         }
 
-        return this._postRequestCircuitBreaker.exec(options)
+        return this._request.post(options)
           .then((response) => handleResponse(response))
       })
   }
