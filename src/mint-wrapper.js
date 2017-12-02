@@ -2,7 +2,7 @@
  * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
+ * LICENSE.md file in the root directory of this source tree.
  */
 
 const BASE_URL = 'https://api.mint.me'
@@ -60,7 +60,7 @@ const defaultOptions = {
 
 class MintWrapper {
   constructor (options = {}) {
-    this._options = _.defaultsDeep(options, defaultOptions)
+    this._options = _.defaultsDeep({}, options, defaultOptions)
 
     this._request = new RequestOnSteroids(this._options)
   }
