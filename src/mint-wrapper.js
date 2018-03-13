@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -12,57 +12,41 @@ const Promise = require('bluebird')
 
 const { MintNotAuthorizedError } = require('./errors')
 
-const RequestOnSteroids = require('request-on-steroids')
+const Request = require('request-on-steroids')
 
-const handleResponse = ({ body }) => {
-  let _body = body
-  if (_.isString(_body)) {
-    _body = JSON.parse(_body)
+const responseHandler = ({ statusCode, statusMessage, body }) => {
+  if (body && body.error_code && body.error_code !== 0) {
+    throw new Error(`${body.error_code} ${body.error_message}`)
   }
 
-  if (_body.error_code && _body.error_code !== 0) {
-    throw new Error(`${_body.error_code} ${_body.error_message}`)
-  }
-
-  return _body
+  return body
 }
 
 const defaultOptions = {
-  request: {
-    headers: {
-      'User-Agent': 'Mint-Android/1.10.2'
-    },
-    callback: (response) => {
-      const { statusCode, statusMessage } = response
-
-      if (statusCode >= 300) {
-        switch (statusCode) {
-          case 401:
-          case 410:
-            throw new MintNotAuthorizedError()
-          default:
-            throw new Error(`${statusCode} ${statusMessage}`)
-        }
+  'request-on-steroids': {
+    request: {
+      headers: {
+        'User-Agent': 'Mint-Android/1.10.2'
       }
-
-      return response
+    },
+    perseverance: {
+      retry: {
+        max_tries: 2,
+        interval: 1000,
+        timeout: 16000,
+        throw_original: true,
+        predicate: (error) => !(error instanceof MintNotAuthorizedError)
+      },
+      breaker: { timeout: 12000, threshold: 80, circuitDuration: 3 * 60 * 60 * 1000 }
     }
-  },
-  retry: {
-    max_tries: 2,
-    interval: 3000,
-    timeout: 24000,
-    throw_original: true,
-    predicate: (error) => !(error instanceof MintNotAuthorizedError)
-  },
-  breaker: { timeout: 64000, threshold: 80, circuitDuration: 3 * 60 * 60 * 1000 }
+  }
 }
 
 class MintWrapper {
   constructor (options = {}) {
     this._options = _.defaultsDeep({}, options, defaultOptions)
 
-    this._request = new RequestOnSteroids(this._options)
+    this._request = new Request(_.get(this._options, 'request-on-steroids'))
   }
 
   set accessToken (accessToken) {
@@ -103,8 +87,7 @@ class MintWrapper {
           }
         }
 
-        return this._request.post(options)
-          .then((response) => handleResponse(response))
+        return this._request.post(options, responseHandler)
           .then((data) => {
             this._accessToken = data.access_token
             this._userId = data.user_id
@@ -141,8 +124,7 @@ class MintWrapper {
             }
           }
 
-          return this._request.get(options)
-            .then((response) => handleResponse(response))
+          return this._request.get(options, responseHandler)
             .then(({ data }) => data)
         }
         const getActive = () => {
@@ -161,8 +143,7 @@ class MintWrapper {
             }
           }
 
-          return this._request.get(options)
-            .then((response) => handleResponse(response))
+          return this._request.get(options, responseHandler)
             .then(({ data }) => data)
         }
 
@@ -193,8 +174,7 @@ class MintWrapper {
           }
         }
 
-        return this._request.get(options)
-          .then((response) => handleResponse(response))
+        return this._request.get(options, responseHandler)
       })
   }
 
@@ -223,8 +203,7 @@ class MintWrapper {
           }
         }
 
-        return this._request.get(options)
-          .then((response) => handleResponse(response))
+        return this._request.get(options, responseHandler)
           .then(({ data }) => _.get(data, '[0]'))
       })
   }
@@ -258,8 +237,7 @@ class MintWrapper {
           }
         }
 
-        return this._request.get(options)
-          .then((response) => handleResponse(response))
+        return this._request.get(options, responseHandler)
       })
   }
 
@@ -288,8 +266,7 @@ class MintWrapper {
             json: true
           }
 
-          return this._request.post(options)
-            .then((response) => handleResponse(response))
+          return this._request.post(options, responseHandler)
             .then(({ id }) => id)
         }
 
@@ -309,8 +286,7 @@ class MintWrapper {
           json: true
         }
 
-        return this._request.post(options)
-          .then((response) => handleResponse(response))
+        return this._request.post(options, responseHandler)
       })
   }
 
@@ -337,8 +313,7 @@ class MintWrapper {
           }
         }
 
-        return this._request.post(options)
-          .then((response) => handleResponse(response))
+        return this._request.post(options, responseHandler)
       })
   }
 

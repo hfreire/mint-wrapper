@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hugo Freire <hugo@exec.sh>.
+ * Copyright (c) 2018, Hugo Freire <hugo@exec.sh>.
  *
  * This source code is licensed under the license found in the
  * LICENSE.md file in the root directory of this source tree.
@@ -11,18 +11,17 @@ const { MintNotAuthorizedError } = require('../src/errors')
 
 describe('Mint Wrapper', () => {
   let subject
-  let request
+  let Request
 
   before(() => {
-    request = td.object([ 'defaults', 'get', 'post' ])
+    Request = td.constructor([ 'get', 'post' ])
   })
 
   afterEach(() => td.reset())
 
   describe('when constructing', () => {
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -31,22 +30,17 @@ describe('Mint Wrapper', () => {
     it('should set default request headers', () => {
       const captor = td.matchers.captor()
 
-      td.verify(request.defaults(captor.capture()))
+      td.verify(new Request(captor.capture()))
 
       const options = captor.value
-      options.should.have.nested.property('headers.User-Agent', 'Mint-Android/1.10.2')
+      options.should.have.nested.property('request.headers.User-Agent', 'Mint-Android/1.10.2')
     })
   })
 
-  describe('when constructing and loading request', () => {
+  describe('when constructing and loading request-on-steroids', () => {
     beforeEach(() => {
-      const MintWrapper = require('../src/mint-wrapper')
-      subject = new MintWrapper()
-    })
-
-    it('should create a request with defaults function', () => {
-      subject._request.should.have.property('defaults')
-      subject._request.defaults.should.be.instanceOf(Function)
+      const TinderWrapper = require('../src/mint-wrapper')
+      subject = new TinderWrapper()
     })
 
     it('should create a request with get function', () => {
@@ -56,7 +50,7 @@ describe('Mint Wrapper', () => {
 
     it('should create a request with post function', () => {
       subject._request.should.have.property('post')
-      subject._request.post.should.be.instanceOf(Function)
+      subject._request.get.should.be.instanceOf(Function)
     })
   })
 
@@ -67,9 +61,8 @@ describe('Mint Wrapper', () => {
     const response = { statusCode, body }
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.post(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.post(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -80,7 +73,7 @@ describe('Mint Wrapper', () => {
     it('should do a post request to https://api.mint.me/v1/oauth', () => {
       const captor = td.matchers.captor()
 
-      td.verify(request.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+      td.verify(Request.prototype.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
       const options = captor.value
       options.should.have.property('url', 'https://api.mint.me/v1/oauth')
@@ -89,7 +82,7 @@ describe('Mint Wrapper', () => {
     it('should do a post request with form', () => {
       const captor = td.matchers.captor()
 
-      td.verify(request.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+      td.verify(Request.prototype.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
       const options = captor.value
       options.should.have.nested.property('form.oauth_provider', 'fb')
@@ -131,16 +124,15 @@ describe('Mint Wrapper', () => {
     const nearbyActiveBody = require('./mint-wrapper-get_nearby_active-response-ok.json')
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.contains({ url: 'https://api.mint.me/v3/me/nearby' })), { ignoreExtraArgs: true }).thenCallback(null, {
+      td.when(Request.prototype.get(td.matchers.contains({ url: 'https://api.mint.me/v3/me/nearby' }), td.callback({
         statusCode,
         body: nearbyBody
-      })
-      td.when(request.get(td.matchers.contains({ url: 'https://api.mint.me/v3/me/nearby?active' })), { ignoreExtraArgs: true }).thenCallback(null, {
+      }))).thenResolve(nearbyBody)
+      td.when(Request.prototype.get(td.matchers.contains({ url: 'https://api.mint.me/v3/me/nearby?active' }), td.callback({
         statusCode,
-        body: nearbyActiveBody
-      })
-      td.replace('request', request)
+        body: nearbyBody
+      }))).thenResolve(nearbyActiveBody)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -161,8 +153,7 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -186,9 +177,8 @@ describe('Mint Wrapper', () => {
     const response = { statusCode, body }
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.get(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -209,9 +199,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.get(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -223,7 +212,7 @@ describe('Mint Wrapper', () => {
         .then(() => {
           const captor = td.matchers.captor()
 
-          td.verify(request.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+          td.verify(Request.prototype.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
           options.should.have.property('url', 'https://api.mint.me/v5/me')
@@ -268,9 +257,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.get(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -282,7 +270,7 @@ describe('Mint Wrapper', () => {
         .then(() => {
           const captor = td.matchers.captor()
 
-          td.verify(request.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+          td.verify(Request.prototype.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
           options.should.have.property('url', 'https://api.mint.me/v3/profiles')
@@ -346,9 +334,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.get(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -360,7 +347,7 @@ describe('Mint Wrapper', () => {
         .then(() => {
           const captor = td.matchers.captor()
 
-          td.verify(request.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+          td.verify(Request.prototype.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
           options.should.have.property('url', 'https://api.mint.me/v5/me/sync')
@@ -383,9 +370,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.get(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.get(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -397,7 +383,7 @@ describe('Mint Wrapper', () => {
         .then(() => {
           const captor = td.matchers.captor()
 
-          td.verify(request.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+          td.verify(Request.prototype.get(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
           options.should.have.nested.property('qs.t', lastActivityDate.getTime())
@@ -410,8 +396,7 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -453,10 +438,15 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.post(td.matchers.contains({ url: 'https://api.mint.me/v4/me/chats' })), { ignoreExtraArgs: true }).thenCallback(null, { statusCode, body: bodyChats })
-      td.when(request.post(td.matchers.contains({ url: `https://api.mint.me/v2/me/chats/${bodyChats.id}/messages/text` })), { ignoreExtraArgs: true }).thenCallback(null, { statusCode, body: bodyMessages })
-      td.replace('request', request)
+      td.when(Request.prototype.post(td.matchers.contains({ url: 'https://api.mint.me/v4/me/chats' }), td.callback({
+        statusCode,
+        body: bodyChats
+      }))).thenResolve(bodyChats)
+      td.when(Request.prototype.post(td.matchers.contains({ url: `https://api.mint.me/v2/me/chats/${bodyChats.id}/messages/text` }), td.callback({
+        statusCode,
+        body: bodyMessages
+      }))).thenResolve(bodyMessages)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -481,9 +471,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.post(td.matchers.contains({ url: `https://api.mint.me/v2/me/chats/${chatId}/messages/text` })), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.post(td.matchers.contains({ url: `https://api.mint.me/v2/me/chats/${chatId}/messages/text` }), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -525,8 +514,7 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -550,9 +538,8 @@ describe('Mint Wrapper', () => {
     const accessToken = 'my-access-token'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.when(request.post(td.matchers.anything()), { ignoreExtraArgs: true }).thenCallback(null, response)
-      td.replace('request', request)
+      td.when(Request.prototype.post(td.matchers.anything(), td.callback(response))).thenResolve(body)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -564,7 +551,7 @@ describe('Mint Wrapper', () => {
         .then(() => {
           const captor = td.matchers.captor()
 
-          td.verify(request.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
+          td.verify(Request.prototype.post(captor.capture()), { ignoreExtraArgs: true, times: 1 })
 
           const options = captor.value
           options.should.have.property('url', 'https://api.mint.me/v5/me/favorites')
@@ -584,8 +571,7 @@ describe('Mint Wrapper', () => {
     const userId = undefined
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
@@ -622,8 +608,7 @@ describe('Mint Wrapper', () => {
     const userId = 'my-user-id'
 
     beforeEach(() => {
-      td.when(request.defaults(), { ignoreExtraArgs: true }).thenReturn(request)
-      td.replace('request', request)
+      td.replace('request-on-steroids', Request)
 
       const MintWrapper = require('../src/mint-wrapper')
       subject = new MintWrapper()
