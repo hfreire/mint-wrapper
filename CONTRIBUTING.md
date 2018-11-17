@@ -11,7 +11,7 @@ git clone https://github.com/my-github-username/mint-wrapper
 
 Change current directory
 ```
-cd get-me-date
+cd mint-wrapper
 ```
 
 Install NPM dependencies
