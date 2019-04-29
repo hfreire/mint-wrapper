@@ -10,7 +10,7 @@ notifications:
     rooms:
       secure: Ey+V3s2HdAYDd64USjvzZPamTo7JEFa7otwkj8QnZXODL8xFn6jouemRe+Jddb5BibnAPNnoCfOPxnxXabIHLh3wKs3evlGowr24bURALgekMlTih88V0zgf+MFMYSGun9NTFZkM5eQ5OBkueSkHnsy1UnhzTiUkChiBZkLEFjMXNjWhdAgjcB40oWPeNh7ukJm9H++bECyqc6Iugtb8vOtztYhcO7ena8XsVvDh4N8ZbkLici6x0z0VesL5v9nA69HMnjNsP7+aI1X2ILXJ4uit6Lxwe2WHPGP5UlLTt4T+DiPiiGDspa4ZYsVGT7h+rXtIjRdeHOIj4yazmIJyFFMggnph4d+jbQgwn+WRSRsuJoPYQJcxCbWNJib+aOGv4y8Q7Y0a25zgj9DV8j0sTgC/WJ8Xw6FJoxTgMhcJRPoP5VP5SnzjA5DnGTvfwislfLJv4DoqjtsqHlZ9Rt8OdGOHJiNXIj7tCO2nm2f+b5ZSSDlZ2pezaBoo/MbeF2fhWIeGpRCV6+no1MaX9Kh7ZnZ1AyIIhbW0dAXoh2QrOWyhh2Ddu0pTfrYZtMrtmm/+u/EkVkLdfj4S6r8fm5B1JnLWq7xZPk+RVu8e9qVhHuwsjhXEGHmSp2MuY+Ogm9/FDtCr/2UsNHkareLr/FMNReWJR6tiEgjZmdh2oqBjqhI=
     on_success: never
-    on_failure: always
+    on_failure: change
     on_pull_requests: false
 install:
 - npm install
