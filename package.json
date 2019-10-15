@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/hfreire/mint-wrapper#readme",
   "dependencies": {
-    "bluebird": "3.7.0",
+    "bluebird": "3.7.1",
     "lodash": "4.17.15",
     "request-on-steroids": "1.1.31"
   },
