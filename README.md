@@ -1,16 +1,16 @@
 # A :revolving_hearts: Mint :package: wrapper library
 
-[![Build Status](https://travis-ci.org/hfreire/mint-wrapper.svg?branch=master)](https://travis-ci.org/hfreire/mint-wrapper)
+[![](https://github.com/hfreire/mint-wrapper/workflows/ci/badge.svg)](https://github.com/hfreire/mint-wrapper/actions?workflow=ci)
 [![Coverage Status](https://coveralls.io/repos/github/hfreire/mint-wrapper/badge.svg?branch=master)](https://coveralls.io/github/hfreire/mint-wrapper?branch=master)
 [![](https://img.shields.io/github/release/hfreire/mint-wrapper.svg)](https://github.com/hfreire/mint-wrapper/releases)
 [![Version](https://img.shields.io/npm/v/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper)
-[![Downloads](https://img.shields.io/npm/dt/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper) 
+[![Downloads](https://img.shields.io/npm/dt/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper)
 
 > A Mint wrapper library.
 
 ### Features
 * Retries :shit: failing requests in temporary and unexpected system and :boom: network failures :white_check_mark:
-* Uses [Brakes](https://github.com/awolden/brakes) circuit breakers to :hand: fail-fast until it is safe to retry :white_check_mark: 
+* Uses [Brakes](https://github.com/awolden/brakes) circuit breakers to :hand: fail-fast until it is safe to retry :white_check_mark:
 * Supports [Bluebird](https://github.com/petkaantonov/bluebird) :bird: promises :white_check_mark:
 
 ### How to install
@@ -34,7 +34,7 @@ mint.authorize(facebookAccessToken)
 ```
 
 ### How to contribute
-You can contribute either with code (e.g., new features, bug fixes and documentation) or by [donating 5 EUR](https://paypal.me/hfreire/5). You can read the [contributing guidelines](CONTRIBUTING.md) for instructions on how to contribute with code. 
+You can contribute either with code (e.g., new features, bug fixes and documentation) or by [donating 5 EUR](https://paypal.me/hfreire/5). You can read the [contributing guidelines](CONTRIBUTING.md) for instructions on how to contribute with code.
 
 All donation proceedings will go to the [Sverige för UNHCR](https://sverigeforunhcr.se), a swedish partner of the [UNHCR - The UN Refugee Agency](http://www.unhcr.org), a global organisation dedicated to saving lives, protecting rights and building a better future for refugees, forcibly displaced communities and stateless people.
 
