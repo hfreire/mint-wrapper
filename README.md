@@ -2,6 +2,7 @@
 
 [![](https://github.com/hfreire/mint-wrapper/workflows/ci/badge.svg)](https://github.com/hfreire/mint-wrapper/actions?workflow=ci)
 [![Coverage Status](https://coveralls.io/repos/github/hfreire/mint-wrapper/badge.svg?branch=master)](https://coveralls.io/github/hfreire/mint-wrapper?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/github/hfreire/mint-wrapper/badge.svg)](https://snyk.io/test/github/hfreire/mint-wrapper)
 [![](https://img.shields.io/github/release/hfreire/mint-wrapper.svg)](https://github.com/hfreire/mint-wrapper/releases)
 [![Version](https://img.shields.io/npm/v/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper)
 [![Downloads](https://img.shields.io/npm/dt/mint-wrapper.svg)](https://www.npmjs.com/package/mint-wrapper)
